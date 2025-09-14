@@ -1,0 +1,201 @@
+/* General Styling */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.app-container {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 600px;
+}
+
+h1, h2 {
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+/* Controls Styling */
+.control-group {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+input[type="range"] {
+    flex-grow: 1;
+}
+
+input[type="number"] {
+    width: 60px;
+    background-color: #333;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+button {
+    background-color: #3d5afe;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #304ffe;
+}
+
+#stop-btn {
+    background-color: #f44336;
+}
+#stop-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Sequencer and Editor Styling */
+.sequencer-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    min-height: 50px;
+    flex-wrap: wrap;
+}
+
+.measure-block {
+    position: relative;
+    padding: 1rem;
+    background-color: #444;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    border: 2px solid transparent;
+}
+
+.measure-block:hover {
+    background-color: #555;
+}
+
+.measure-block.is-active {
+    background-color: #3d5afe;
+    color: white;
+}
+
+.measure-block.is-playing {
+    border-color: #ffab40; /* Highlight for the currently playing measure */
+}
+
+.measure-editor.is-hidden {
+    display: none;
+}
+
+.pattern-grid {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+/* STYLES FOR THE TWO-SQUARE PULSE VISUALIZER */
+.pulse-toggle {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #666;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px;
+    background: #1e1e1e;
+}
+
+.pulse-toggle.is-playing {
+    border-color: #ffffff; /* Highlight for the currently playing pulse */
+    transform: scale(1.1);
+}
+
+.pulse-square {
+    width: 90%;
+    height: 46%;
+    background-color: #333; /* "Off" state color */
+    border-radius: 2px;
+    transition: background-color 0.1s;
+}
+
+.pulse-square.is-lit {
+    background-color: #69f0ae; /* "On" state color */
+}
+
+
+.remove-measure-btn {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    font-size: 1.2rem;
+    color: #aaa;
+    cursor: pointer;
+    padding: 0 4px;
+    border-radius: 4px;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.remove-measure-btn:hover {
+    color: #fff;
+    background-color: #f44336;
+}
+
+#tempo-input {
+    width: 70px; /* Gives it enough space for 3 digits */
+    text-align: center;
+    font-size: 1rem;
+}
+
+.session-controls {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+#save-btn {
+    background-color: #00796b; /* Teal */
+}
+#save-btn:hover {
+    background-color: #00695c;
+}
+
+#load-btn {
+    background-color: #512da8; /* Purple */
+}
+#load-btn:hover {
+    background-color: #4527a0;
+}
+
+/* Footer Styling */
+footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #444;
+    color: #888;
+    font-size: 0.9rem;
+}
