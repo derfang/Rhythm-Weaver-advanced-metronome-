@@ -1,0 +1,113 @@
+{
+  "tempo": 26,
+  "measures": [
+    {
+      "subdivisions": 4,
+      "pattern": [
+        2,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 5,
+      "pattern": [
+        2,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 5,
+      "pattern": [
+        2,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 4,
+      "pattern": [
+        2,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 4,
+      "pattern": [
+        2,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 4,
+      "pattern": [
+        2,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 4,
+      "pattern": [
+        2,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 4,
+      "pattern": [
+        2,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 4,
+      "pattern": [
+        2,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 6,
+      "pattern": [
+        2,
+        false,
+        false,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "subdivisions": 2,
+      "pattern": [
+        2,
+        true
+      ]
+    },
+    {
+      "subdivisions": 2,
+      "pattern": [
+        2,
+        true
+      ]
+    }
+  ]
+}
