@@ -37,7 +37,8 @@ input[type="range"] {
     flex-grow: 1;
 }
 
-input[type="number"] {
+input[type="number"],
+#preset-name-input {
     width: 60px;
     background-color: #333;
     color: #e0e0e0;
@@ -146,7 +147,6 @@ button:hover {
     background-color: #69f0ae; /* "On" state color */
 }
 
-
 .remove-measure-btn {
     position: absolute;
     top: 2px;
@@ -176,17 +176,24 @@ button:hover {
     gap: 1rem;
 }
 
-#save-btn {
-    background-color: #00796b; /* Teal */
+#preset-btn {
+    background-color: #00796b;
 }
-#save-btn:hover {
+#preset-btn:hover {
     background-color: #00695c;
 }
 
-#load-btn {
-    background-color: #512da8; /* Purple */
+#export-btn {
+    background-color: #512da8;
 }
-#load-btn:hover {
+#export-btn:hover {
+    background-color: #4527a0;
+}
+
+#import-btn {
+    background-color: #512da8;
+}
+#import-btn:hover {
     background-color: #4527a0;
 }
 
@@ -198,4 +205,100 @@ footer {
     border-top: 1px solid #444;
     color: #888;
     font-size: 0.9rem;
+}
+
+/* STYLES FOR PRESET MANAGER MODAL */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.is-hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    border: 1px solid #444;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+#preset-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 0.5rem;
+}
+
+#preset-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #333;
+}
+
+#preset-list li:last-child {
+    border-bottom: none;
+}
+
+.preset-item-name {
+    font-weight: bold;
+}
+
+.preset-item-actions button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+}
+
+.preset-item-actions .delete-btn {
+    background-color: #b71c1c;
+}
+.preset-item-actions .delete-btn:hover {
+    background-color: #9f1919;
+}
+
+#preset-name-input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    box-sizing: border-box; /* Important */
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: #888;
+    padding: 0;
+    cursor: pointer;
 }

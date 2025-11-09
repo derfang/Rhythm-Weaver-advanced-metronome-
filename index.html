@@ -4,7 +4,306 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rhythm Weaver</title>
-    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* General Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .app-container {
+            background-color: #1e1e1e;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1, h2 {
+            border-bottom: 2px solid #444;
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        /* Controls Styling */
+        .control-group {
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+        }
+
+        input[type="number"],
+        #preset-name-input {
+            width: 60px;
+            background-color: #333;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+
+        button {
+            background-color: #3d5afe;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #304ffe;
+        }
+
+        #stop-btn {
+            background-color: #f44336;
+        }
+        #stop-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Sequencer and Editor Styling */
+        .sequencer-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            min-height: 50px;
+            flex-wrap: wrap;
+        }
+
+        .measure-block {
+            position: relative;
+            padding: 1rem;
+            background-color: #444;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .measure-block:hover {
+            background-color: #555;
+        }
+
+        .measure-block.is-active {
+            background-color: #3d5afe;
+            color: white;
+        }
+
+        .measure-block.is-playing {
+            border-color: #ffab40;
+        }
+
+        .measure-editor.is-hidden {
+            display: none;
+        }
+
+        .pattern-grid {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* STYLES FOR THE TWO-SQUARE PULSE VISUALIZER */
+        .pulse-toggle {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #666;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px;
+            background: #1e1e1e;
+        }
+
+        .pulse-toggle.is-playing {
+            border-color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .pulse-square {
+            width: 90%;
+            height: 46%;
+            background-color: #333;
+            border-radius: 2px;
+            transition: background-color 0.1s;
+        }
+
+        .pulse-square.is-lit {
+            background-color: #69f0ae;
+        }
+
+        .remove-measure-btn {
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            font-size: 1.2rem;
+            color: #aaa;
+            cursor: pointer;
+            padding: 0 4px;
+            border-radius: 4px;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .remove-measure-btn:hover {
+            color: #fff;
+            background-color: #f44336;
+        }
+
+        #tempo-input {
+            width: 70px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .session-controls {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        #preset-btn {
+            background-color: #00796b;
+        }
+        #preset-btn:hover {
+            background-color: #00695c;
+        }
+
+        #export-btn, #import-btn {
+            background-color: #512da8;
+        }
+        #export-btn:hover, #import-btn:hover {
+            background-color: #4527a0;
+        }
+
+        /* Footer Styling */
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* STYLES FOR PRESET MANAGER MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.is-hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background-color: #1e1e1e;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            border: 1px solid #444;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        #preset-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 0.5rem;
+        }
+
+        #preset-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #333;
+        }
+
+        #preset-list li:last-child {
+            border-bottom: none;
+        }
+
+        .preset-item-name {
+            font-weight: bold;
+        }
+
+        .preset-item-actions button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .preset-item-actions .delete-btn {
+            background-color: #b71c1c;
+        }
+        .preset-item-actions .delete-btn:hover {
+            background-color: #9f1919;
+        }
+
+        #preset-name-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            background: none;
+            border: none;
+            color: #888;
+            padding: 0;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -23,16 +322,16 @@
                 <button id="stop-btn">Stop</button>
             </div>
             <div class="session-controls">
-                <button id="save-btn">Save to File</button>
-                <button id="load-btn">Load from File</button>
-                <input type="file" id="load-input" accept=".json" style="display: none;">
+                <button id="preset-btn">Manage Presets</button>
+                <button id="export-btn">Export</button>
+                <button id="import-btn">Import</button>
+                <input type="file" id="import-input" accept=".json" style="display: none;">
             </div>
         </div>
 
         <div class="measure-sequencer">
             <h2>Song Sequencer</h2>
-            <div id="sequencer-container" class="sequencer-container">
-                </div>
+            <div id="sequencer-container" class="sequencer-container"></div>
             <button id="add-measure-btn">+ Add Measure</button>
         </div>
 
@@ -42,17 +341,456 @@
                 <label for="subdivisions">Subdivisions:</label>
                 <input type="number" id="subdivisions" min="1" max="16" value="4">
             </div>
-            <div id="pattern-grid" class="pattern-grid">
-                </div>
+            <div id="pattern-grid" class="pattern-grid"></div>
             <button id="close-editor-btn">Done</button>
         </div>
 
         <footer>
             <p>Made with &hearts; by DERFANG</p>
         </footer>
-
     </div>
 
-    <script src="script.js"></script>
+    <div id="preset-modal" class="modal-overlay is-hidden">
+        <div class="modal-content">
+            <h2>Manage Presets</h2>
+            <div class="modal-body">
+                <div class="preset-list-container">
+                    <h3>Saved Presets</h3>
+                    <ul id="preset-list"></ul>
+                </div>
+                <div class="preset-save-container">
+                    <h3>Save Current Rhythm</h3>
+                    <input type="text" id="preset-name-input" placeholder="Enter preset name...">
+                    <button id="save-preset-btn">Save</button>
+                </div>
+            </div>
+            <button id="close-modal-btn" class="close-modal-btn">&times;</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let db;
+            let audioContext;
+            let schedulerTimerID;
+            let nextNoteTime = 0.0;
+            const scheduleAheadTime = 0.1;
+            let currentMeasure = 0;
+            let currentPulse = 0;
+            let state = {
+                isPlaying: false,
+                tempo: 120,
+                measures: [],
+                currentEditingMeasure: -1,
+            };
+
+            const tempoSlider = document.getElementById('tempo');
+            const tempoInput = document.getElementById('tempo-input');
+            const playBtn = document.getElementById('play-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            const addMeasureBtn = document.getElementById('add-measure-btn');
+            const sequencerContainer = document.getElementById('sequencer-container');
+            const measureEditor = document.getElementById('measure-editor');
+            const editorTitle = document.getElementById('editor-title');
+            const subdivisionsInput = document.getElementById('subdivisions');
+            const patternGrid = document.getElementById('pattern-grid');
+            const closeEditorBtn = document.getElementById('close-editor-btn');
+            const presetBtn = document.getElementById('preset-btn');
+            const exportBtn = document.getElementById('export-btn');
+            const importBtn = document.getElementById('import-btn');
+            const importInput = document.getElementById('import-input');
+            const presetModal = document.getElementById('preset-modal');
+            const presetList = document.getElementById('preset-list');
+            const presetNameInput = document.getElementById('preset-name-input');
+            const savePresetBtn = document.getElementById('save-preset-btn');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+
+            function initDB() {
+                try {
+                    const request = indexedDB.open('RhythmWeaverDB', 1);
+                    request.onerror = (event) => console.error('Database error:', event.target.errorCode);
+                    request.onsuccess = (event) => db = event.target.result;
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        db.createObjectStore('presets', { keyPath: 'name' });
+                    };
+                } catch (error) {
+                    console.error("Could not initialize IndexedDB. Presets will be unavailable.", error);
+                    presetBtn.disabled = true;
+                    presetBtn.textContent = "Presets Disabled";
+                }
+            }
+
+            function savePreset(name, data) {
+                if (!db) return;
+                const transaction = db.transaction(['presets'], 'readwrite');
+                const store = transaction.objectStore('presets');
+                store.put({ name, data });
+                transaction.oncomplete = () => openPresetModal();
+            }
+
+            function getAllPresets(callback) {
+                if (!db) return callback([]);
+                const transaction = db.transaction(['presets'], 'readonly');
+                const store = transaction.objectStore('presets');
+                const request = store.getAll();
+                request.onerror = () => callback([]);
+                request.onsuccess = () => callback(request.result);
+            }
+            
+            function deletePreset(name) {
+                if (!db) return;
+                const transaction = db.transaction(['presets'], 'readwrite');
+                const store = transaction.objectStore('presets');
+                store.delete(name);
+                transaction.oncomplete = () => openPresetModal();
+            }
+
+            function openPresetModal() {
+                if (!db) {
+                    alert("Preset manager is unavailable. Your browser may be blocking database access.");
+                    return;
+                }
+                getAllPresets(presets => {
+                    presetList.innerHTML = '';
+                    if (presets.length === 0) {
+                        presetList.innerHTML = '<li>No presets saved yet.</li>';
+                    } else {
+                        presets.forEach(preset => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `
+                                <span class="preset-item-name">${preset.name}</span>
+                                <div class="preset-item-actions">
+                                    <button class="load-preset-btn" data-name="${preset.name}">Load</button>
+                                    <button class="delete-btn" data-name="${preset.name}">Delete</button>
+                                </div>
+                            `;
+                            presetList.appendChild(li);
+                        });
+                    }
+                });
+                presetModal.classList.remove('is-hidden');
+            }
+
+            function closePresetModal() {
+                presetModal.classList.add('is-hidden');
+                presetNameInput.value = '';
+            }
+
+            function scheduleNotes() {
+                while (nextNoteTime < audioContext.currentTime + scheduleAheadTime) {
+                    if (state.measures.length === 0) return;
+                    const measure = state.measures[currentMeasure];
+                    const subdivisions = measure.subdivisions;
+                    const pulseDuration = (60.0 / state.tempo) / subdivisions;
+                    const pulseState = measure.pattern[currentPulse];
+                    if (pulseState > 0) playSound(nextNoteTime, pulseState);
+                    scheduleVisualFeedback(currentMeasure, currentPulse, nextNoteTime);
+                    nextNoteTime += pulseDuration;
+                    currentPulse++;
+                    if (currentPulse >= subdivisions) {
+                        currentPulse = 0;
+                        currentMeasure = (currentMeasure + 1) % state.measures.length;
+                    }
+                }
+            }
+
+            function playSound(time, pulseState) {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                let frequency = 440.0;
+                if (pulseState === 2) frequency = 880.0;
+                osc.frequency.setValueAtTime(frequency, time);
+                gain.gain.setValueAtTime(1, time);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+                osc.start(time);
+                osc.stop(time + 0.05);
+            }
+
+            function scheduleVisualFeedback(measureIndex, pulseIndex, time) {
+                const delay = (time - audioContext.currentTime) * 1000;
+                setTimeout(() => {
+                    document.querySelectorAll('.measure-block').forEach((block, index) => block.classList.toggle('is-playing', index === measureIndex));
+                    if (state.currentEditingMeasure === measureIndex) {
+                        document.querySelectorAll('.pulse-toggle').forEach((toggle, index) => toggle.classList.toggle('is-playing', index === pulseIndex));
+                    }
+                }, delay);
+            }
+
+            function scheduler() {
+                scheduleNotes();
+                schedulerTimerID = setTimeout(scheduler, 25);
+            }
+
+            function renderEditor() {
+                if (state.currentEditingMeasure < 0 || !state.measures[state.currentEditingMeasure]) {
+                    measureEditor.classList.add('is-hidden');
+                    return;
+                }
+                const measure = state.measures[state.currentEditingMeasure];
+                editorTitle.textContent = `Edit Measure ${state.currentEditingMeasure + 1}`;
+                subdivisionsInput.value = measure.subdivisions;
+                patternGrid.innerHTML = '';
+                for (let i = 0; i < measure.subdivisions; i++) {
+                    const pulseToggle = document.createElement('div');
+                    pulseToggle.className = 'pulse-toggle';
+                    pulseToggle.dataset.index = i;
+                    const topSquare = document.createElement('div');
+                    topSquare.className = 'pulse-square';
+                    const bottomSquare = document.createElement('div');
+                    bottomSquare.className = 'pulse-square';
+                    const pulseState = measure.pattern[i];
+                    if (pulseState === 1) {
+                        bottomSquare.classList.add('is-lit');
+                    } else if (pulseState === 2) {
+                        bottomSquare.classList.add('is-lit');
+                        topSquare.classList.add('is-lit');
+                    }
+                    pulseToggle.appendChild(topSquare);
+                    pulseToggle.appendChild(bottomSquare);
+                    patternGrid.appendChild(pulseToggle);
+                }
+                measureEditor.classList.remove('is-hidden');
+            }
+
+            function saveStateToLocalStorage() {
+                try {
+                    const stateToSave = { tempo: state.tempo, measures: state.measures };
+                    localStorage.setItem('rhythmWeaverState', JSON.stringify(stateToSave));
+                } catch (error) {
+                    console.warn("Could not save state to localStorage.", error);
+                }
+            }
+
+            function loadStateFromLocalStorage() {
+                try {
+                    const savedState = localStorage.getItem('rhythmWeaverState');
+                    if (savedState) {
+                        const loadedState = JSON.parse(savedState);
+                        state.tempo = loadedState.tempo || 120;
+                        state.measures = loadedState.measures || [];
+                    }
+                } catch (error) {
+                    console.warn("Could not load state from localStorage.", error);
+                }
+            }
+
+            function updateUI() {
+                tempoSlider.value = state.tempo;
+                tempoInput.value = state.tempo;
+                renderSequencer();
+                renderEditor();
+            }
+
+            function renderSequencer() {
+                sequencerContainer.innerHTML = '';
+                state.measures.forEach((measure, index) => {
+                    const measureBlock = document.createElement('div');
+                    measureBlock.className = 'measure-block';
+                    measureBlock.textContent = `Measure ${index + 1} (${measure.subdivisions})`;
+                    measureBlock.dataset.index = index;
+                    if (index === state.currentEditingMeasure) measureBlock.classList.add('is-active');
+                    const removeBtn = document.createElement('span');
+                    removeBtn.className = 'remove-measure-btn';
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.dataset.index = index;
+                    measureBlock.appendChild(removeBtn);
+                    sequencerContainer.appendChild(measureBlock);
+                });
+            }
+
+            playBtn.addEventListener('click', () => {
+                if (!state.isPlaying) {
+                    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    if (state.measures.length === 0) return alert("Please add at least one measure before playing.");
+                    state.isPlaying = true;
+                    nextNoteTime = audioContext.currentTime + 0.1;
+                    currentMeasure = state.measures.length > 1 ? state.measures.length - 1 : 0;
+                    currentPulse = 0;
+                    scheduler();
+                    playBtn.textContent = 'Pause';
+                } else {
+                    state.isPlaying = false;
+                    clearTimeout(schedulerTimerID);
+                    playBtn.textContent = 'Play';
+                }
+            });
+
+            stopBtn.addEventListener('click', () => {
+                state.isPlaying = false;
+                clearTimeout(schedulerTimerID);
+                playBtn.textContent = 'Play';
+                currentMeasure = 0;
+                currentPulse = 0;
+                document.querySelectorAll('.is-playing').forEach(el => el.classList.remove('is-playing'));
+            });
+
+            tempoSlider.addEventListener('input', (e) => {
+                state.tempo = parseInt(e.target.value, 10);
+                tempoInput.value = state.tempo;
+                saveStateToLocalStorage();
+            });
+
+            tempoInput.addEventListener('input', (e) => {
+                const newTempo = parseInt(e.target.value, 10);
+                if (isNaN(newTempo)) return;
+                const clampedTempo = Math.max(1, Math.min(300, newTempo));
+                state.tempo = clampedTempo;
+                tempoSlider.value = clampedTempo;
+                saveStateToLocalStorage();
+            });
+
+            tempoInput.addEventListener('change', (e) => { e.target.value = state.tempo; });
+
+            addMeasureBtn.addEventListener('click', () => {
+                state.measures.push({ subdivisions: 4, pattern: [2, 1, 1, 1] });
+                renderSequencer();
+                saveStateToLocalStorage();
+            });
+
+            sequencerContainer.addEventListener('click', (e) => {
+                const removeBtn = e.target.closest('.remove-measure-btn');
+                if (removeBtn) {
+                    const indexToRemove = parseInt(removeBtn.dataset.index, 10);
+                    if (state.isPlaying) stopBtn.click();
+                    state.measures.splice(indexToRemove, 1);
+                    if (state.currentEditingMeasure === indexToRemove) state.currentEditingMeasure = -1;
+                    else if (state.currentEditingMeasure > indexToRemove) state.currentEditingMeasure--;
+                    updateUI();
+                    saveStateToLocalStorage();
+                    return;
+                }
+                const measureBlock = e.target.closest('.measure-block');
+                if (measureBlock) {
+                    const index = parseInt(measureBlock.dataset.index, 10);
+                    state.currentEditingMeasure = index;
+                    renderSequencer();
+                    renderEditor();
+                }
+            });
+
+            subdivisionsInput.addEventListener('input', (e) => {
+                if (state.currentEditingMeasure < 0) return;
+                const measure = state.measures[state.currentEditingMeasure];
+                const newSubdivisions = parseInt(e.target.value, 10);
+                if (newSubdivisions > 0 && newSubdivisions <= 16) {
+                    const oldLength = measure.pattern.length;
+                    if (newSubdivisions > oldLength) measure.pattern = measure.pattern.concat(Array(newSubdivisions - oldLength).fill(1));
+                    else measure.pattern = measure.pattern.slice(0, newSubdivisions);
+                    measure.subdivisions = newSubdivisions;
+                    renderEditor();
+                    renderSequencer();
+                    saveStateToLocalStorage();
+                }
+            });
+
+            patternGrid.addEventListener('click', (e) => {
+                const pulseToggle = e.target.closest('.pulse-toggle');
+                if (pulseToggle) {
+                    const index = parseInt(pulseToggle.dataset.index, 10);
+                    const measure = state.measures[state.currentEditingMeasure];
+                    measure.pattern[index] = (measure.pattern[index] + 1) % 3;
+                    renderEditor();
+                    saveStateToLocalStorage();
+                }
+            });
+
+            closeEditorBtn.addEventListener('click', () => {
+                state.currentEditingMeasure = -1;
+                renderSequencer();
+                renderEditor();
+            });
+
+            presetBtn.addEventListener('click', openPresetModal);
+            closeModalBtn.addEventListener('click', closePresetModal);
+            presetModal.addEventListener('click', (e) => { if (e.target === presetModal) closePresetModal(); });
+
+            savePresetBtn.addEventListener('click', () => {
+                const name = presetNameInput.value.trim();
+                if (!name) return alert('Please enter a name for your preset.');
+                const dataToSave = { tempo: state.tempo, measures: state.measures };
+                savePreset(name, dataToSave);
+                presetNameInput.value = '';
+            });
+
+            presetList.addEventListener('click', (e) => {
+                const target = e.target;
+                const presetName = target.dataset.name;
+                if (target.classList.contains('load-preset-btn')) {
+                    getAllPresets(presets => {
+                        const presetToLoad = presets.find(p => p.name === presetName);
+                        if (presetToLoad) {
+                            state.tempo = presetToLoad.data.tempo || 120;
+                            state.measures = presetToLoad.data.measures || [];
+                            state.currentEditingMeasure = -1;
+                            if (state.isPlaying) stopBtn.click();
+                            updateUI();
+                            saveStateToLocalStorage();
+                            closePresetModal();
+                        }
+                    });
+                }
+                if (target.classList.contains('delete-btn')) {
+                    if (confirm(`Are you sure you want to delete the preset "${presetName}"?`)) deletePreset(presetName);
+                }
+            });
+
+            exportBtn.addEventListener('click', () => {
+                const stateToSave = { tempo: state.tempo, measures: state.measures };
+                const jsonString = JSON.stringify(stateToSave, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `rhythm-weaver-session.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            importBtn.addEventListener('click', () => { importInput.click(); });
+
+            importInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const loadedState = JSON.parse(event.target.result);
+                        state.tempo = loadedState.tempo || 120;
+                        state.measures = loadedState.measures || [];
+                        state.currentEditingMeasure = -1;
+                        if (state.isPlaying) stopBtn.click();
+                        updateUI();
+                        saveStateToLocalStorage();
+                    } catch (error) {
+                        alert('Error: Could not load the file.');
+                        console.error('File parsing error:', error);
+                    }
+                };
+                reader.readAsText(file);
+                e.target.value = '';
+            });
+            
+            try {
+                initDB();
+                loadStateFromLocalStorage();
+                if (state.measures.length === 0) {
+                    state.measures.push({ subdivisions: 4, pattern: [2, 1, 1, 1] });
+                }
+                updateUI();
+            } catch (error) {
+                console.error("A critical error occurred during initialization:", error);
+                alert("Rhythm Weaver could not start correctly. Some features may not work.");
+                if (state.measures.length === 0) {
+                    state.measures.push({ subdivisions: 4, pattern: [2, 1, 1, 1] });
+                }
+                updateUI();
+            }
+        });
+    </script>
 </body>
 </html>
